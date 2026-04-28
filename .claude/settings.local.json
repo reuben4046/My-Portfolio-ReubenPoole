@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole status)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole diff)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole add index.html)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole commit -m ' *)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole push)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole remote set-url origin git@github.com:reuben4046/My-Portfolio-ReubenPoole.git)",
+      "Bash(ssh-keyscan github.com)",
+      "Bash(gh auth *)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole remote set-url origin https://github.com/reuben4046/My-Portfolio-ReubenPoole.git)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole config credential.helper osxkeychain)"
+    ]
+  }
+}
