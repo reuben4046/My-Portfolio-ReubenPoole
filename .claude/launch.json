@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Static File Server",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole/serve.py"],
+      "port": 3000
+    }
+  ]
+}
