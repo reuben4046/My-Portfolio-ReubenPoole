@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procedural Island Generator — Reuben Poole</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:       #ffffff;
+  --surface:  #f7f7f8;
+  --surface2: #efefef;
+  --border:   #e0e0e0;
+  --text:     #111111;
+  --muted:    #777777;
+  --accent:   oklch(0.48 0.16 252);
+  --nav-h:    56px;
+  --pad:      clamp(16px, 5vw, 48px);
+  --max-w:    800px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+a:hover { opacity: 0.75; }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 50;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 var(--pad);
+}
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none; transition: color 0.15s;
+}
+.nav-back:hover { color: var(--text); }
+.nav-logo {
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+  color: var(--muted); text-decoration: none;
+}
+.nav-logo span { color: var(--accent); }
+
+/* HERO */
+.hero {
+  border-bottom: 1px solid var(--border);
+  padding: 48px var(--pad) 40px;
+}
+.hero-inner { max-width: var(--max-w); margin: 0 auto; }
+.eyebrow {
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  text-decoration: none;
+}
+.eyebrow::before { content:''; width:24px; height:1px; background:var(--accent); }
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 800; letter-spacing: -0.02em;
+  color: var(--text); margin-bottom: 16px; line-height: 1.1;
+}
+.hero-meta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  font-size: 13px; color: var(--muted); font-weight: 300;
+  margin-bottom: 20px;
+}
+.hero-meta span { display: flex; align-items: center; gap: 6px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag {
+  font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 10px; background: var(--surface);
+  border: 1px solid var(--border); color: var(--muted);
+}
+
+/* GIF */
+.hero-gif {
+  max-width: var(--max-w); margin: 32px auto 0;
+}
+.hero-gif img {
+  width: 100%; border: 1px solid var(--border); display: block;
+}
+
+/* CONTENT */
+.content {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 56px var(--pad) 80px;
+}
+
+/* Section titles */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+
+h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(18px, 2.5vw, 24px);
+  font-weight: 700; letter-spacing: -0.01em;
+  color: var(--text); margin-bottom: 14px; margin-top: 40px;
+  line-height: 1.25;
+}
+h2:first-child { margin-top: 0; }
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px; margin-top: 28px;
+}
+
+p {
+  font-size: 15px; font-weight: 300;
+  color: #333; margin-bottom: 16px; line-height: 1.75;
+}
+
+/* Feature cards grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 24px 0 32px;
+}
+.feature-card {
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.feature-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 6px;
+}
+.feature-card-desc {
+  font-size: 13px; font-weight: 300;
+  color: var(--muted); line-height: 1.55;
+}
+
+/* Reflection cards */
+.reflection-block {
+  margin-bottom: 32px;
+  padding: 24px 24px 20px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--surface);
+}
+.reflection-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px;
+}
+.reflection-block p { margin-bottom: 0; font-size: 14px; }
+
+/* Resources list */
+.resources-list {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+  margin: 16px 0 32px;
+}
+.resources-list li {
+  font-size: 14px; font-weight: 300;
+  color: var(--muted); padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-left: 2px solid var(--border);
+  transition: border-color 0.15s;
+}
+.resources-list li:hover { border-left-color: var(--accent); }
+
+/* References */
+.references {
+  border-top: 1px solid var(--border);
+  padding-top: 28px; margin-top: 48px;
+}
+.references p {
+  font-size: 13px; color: var(--muted);
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  margin: 0;
+}
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+/* Quote */
+blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 14px 20px; background: var(--surface);
+  margin: 20px 0; font-style: italic;
+  font-size: 14px; font-weight: 300; color: #555;
+  line-height: 1.7;
+}
+blockquote cite {
+  display: block; margin-top: 8px;
+  font-style: normal; font-size: 12px;
+  font-family: 'Syne', sans-serif; letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 20px var(--pad);
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+.footer-copy { font-size: 12px; color: var(--muted); font-weight: 300; }
+
+/* Devlog figures */
+.devlog-figure {
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+.devlog-figure img {
+  width: 100%;
+  display: block;
+}
+.devlog-figure figcaption {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  font-family: 'Syne', sans-serif;
+  letter-spacing: 0.02em;
+}
+.devlog-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 24px 0;
+}
+.devlog-row .devlog-figure { margin: 0; }
+
+@media (max-width: 520px) {
+  .devlog-row { grid-template-columns: 1fr; }
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  h2 { margin-top: 28px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="Wireframe Portfolio.html" class="nav-back">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 14 14"><path d="M9 2L4 7l5 5"/></svg>
+    Back
+  </a>
+  <a href="Wireframe Portfolio.html" class="nav-logo">Reuben <span>Poole</span></a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">GAD 176.2 — Unity / C#</div>
+    <h1>Procedural Island Generator</h1>
+    <div class="hero-meta">
+      <span>Solo Project</span>
+      <span>·</span>
+      <span>SAE Institute</span>
+    </div>
+    <div class="tags">
+      <span class="tag">Unity</span>
+      <span class="tag">C#</span>
+      <span class="tag">Procedural Generation</span>
+      <span class="tag">Mesh Generation</span>
+      <span class="tag">Perlin Noise</span>
+      <span class="tag">Shader Graph</span>
+    </div>
+  </div>
+  <div class="hero-gif">
+    <img src="uploads/Screen Recording 2026-04-28 at 1.24.18 pm.gif" alt="Procedural Island Generator demo">
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- TECHNICAL -->
+  <div class="section-title">Technical Overview</div>
+
+  <h2>Terrain Mesh Generation</h2>
+  <p>The mesh is made up of Quads, each consisting of two triangles. Each triangle has three vertices added to an array in clockwise order. A key challenge was ensuring the last triangle in each row was not generated twice — doing so causes unwanted issues with mesh normals.</p>
+
+  <figure class="devlog-figure">
+    <img src="uploads/Screenshot 2026-04-28 at 2.34.15 pm.png" alt="Mesh generation diagram showing quad vertices and clockwise triangle winding">
+    <figcaption>Hand-drawn diagram: quad structure, vertex ordering, and clockwise triangle winding rules</figcaption>
+  </figure>
+
+  <h2>Perlin Noise</h2>
+  <p>To transform a flat square grid into natural mountainous terrain, Perlin noise controls the Y value of each vertex. A Perlin noise image uses black (0) and white (1) as a gradient — this float value is multiplied against each vertex's Y position to produce organic height variation.</p>
+  <p>Research for this process drew heavily from Sebastian Lague's procedural landmass generation tutorial series (Lague, 2016).</p>
+
+  <div class="devlog-row">
+    <figure class="devlog-figure">
+      <img src="uploads/Screenshot 2026-04-28 at 2.34.42 pm.png" alt="Perlin noise texture">
+      <figcaption>Generated Perlin noise sample</figcaption>
+    </figure>
+    <figure class="devlog-figure">
+      <img src="uploads/Screenshot 2026-04-28 at 2.35.03 pm.png" alt="Perlin noise legend showing black = 0, white = 1">
+      <figcaption>White = 1 (peak), Black = 0 (valley) — used as a height gradient</figcaption>
+    </figure>
+  </div>
+
+  <figure class="devlog-figure">
+    <img src="uploads/Screenshot 2026-04-28 at 2.35.22 pm.png" alt="Wireframe mesh with Perlin noise applied to vertex heights">
+    <figcaption>Flat grid mesh after applying Perlin noise to vertex Y values — wireframe view</figcaption>
+  </figure>
+
+  <h2>Sine Wave Fall-off</h2>
+  <p>To create an island shape, a sine wave is used as a fall-off mask over the Perlin noise. After finding the centre of the generated mesh, each vertex's Perlin value is multiplied by the sine function output. Tweaking the amplitude and frequency of the wave shapes the island's silhouette — combining both produces the final result.</p>
+
+  <div class="devlog-row">
+    <figure class="devlog-figure">
+      <img src="uploads/Screenshot 2026-04-28 at 2.35.35 pm.png" alt="Sine wave diagram showing amplitude and frequency">
+      <figcaption>Sine wave used as the fall-off function — amplitude controls island edge slope</figcaption>
+    </figure>
+    <figure class="devlog-figure">
+      <img src="uploads/Screenshot 2026-04-28 at 2.35.53 pm.png" alt="Early island result in Unity with sine wave and Perlin noise combined">
+      <figcaption>Early island result — Perlin noise + sine wave fall-off combined in Unity</figcaption>
+    </figure>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FEATURES -->
+  <div class="section-title">Package Features</div>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-card-title">World Size</div>
+      <div class="feature-card-desc">Dropdown controlling chunk count.<br>Small: 4×4 · Medium: 8×8 · Large: 16×16</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Resolution</div>
+      <div class="feature-card-desc">Controls vertex density.<br>Low: 16 · Medium: 64 · High: 128</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Island Radius</div>
+      <div class="feature-card-desc">Controls the distance between the top and bottom of the sine wave fall-off.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Terrain Material</div>
+      <div class="feature-card-desc">Custom shader graph with swappable textures — e.g. switch to a snowy island palette.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Noise Intensity</div>
+      <div class="feature-card-desc">Controls the scale of Perlin noise. Higher scale = more intense, varied terrain.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Seed</div>
+      <div class="feature-card-desc">Offsets Perlin noise origin. Includes a randomise button (0–10,000) in the inspector.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Height</div>
+      <div class="feature-card-desc">Controls the maximum height of the generated terrain.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Secondary Noise</div>
+      <div class="feature-card-desc">Boolean that adds three extra Perlin noise layers for a bumpier, more detailed result.</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- REFLECTIONS -->
+  <div class="section-title">Reflections</div>
+
+  <h2>Mid-Point Reflection</h2>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Proficiency</div>
+    <p>Throughout this project I developed my technical skills by watching over 40 videos and reading papers on procedural generation, branching into fields like procedural animation and procedural storytelling. One paper helped clarify exactly what PCG is:</p>
+  </div>
+
+  <blockquote>
+    "Procedural content generation (PCG) refers to the algorithmic creation of content. It allows content to be generated automatically, and can therefore greatly reduce the increasing workload of artists."
+    <cite>— van der Linden, Lopes &amp; Bidarra, 2014</cite>
+  </blockquote>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Process</div>
+    <p>I researched and followed tutorials repeatedly until confident enough to write my own procedural mesh. After several rewrites I produced clean, well-structured code with a polished inspector interface. Creating a custom island shader proved unexpectedly time-consuming due to limited tutorial resources on Unity's Shader Graph.</p>
+  </div>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Person</div>
+    <p>This was nominally a group project, but only myself and one other student (Mitchell) contributed meaningful work. Despite reduced participation, Mitchell and I gave each other useful feedback — for example, I helped assess the readability of his Day/Night Cycle. The experience reinforced the value of finding collaborators who are equally invested.</p>
+  </div>
+
+  <h2>Project-Completion Reflection</h2>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Appraisal</div>
+    <p>I'm pleased with the outcome, though I would have loved to add auto-scaling water assets for different island sizes and a procedural tree-placement system using mesh normals. The project didn't match my initial scope expectations, but after properly researching the topic I feel I achieved something solid and I'm proud of the result.</p>
+  </div>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Challenges</div>
+    <p>The biggest challenge was implementing a fall-off to the terrain generation. I tried Sebastian Lague's fall-off map method and got it working in isolation, but couldn't integrate it with my chunked terrain system. I eventually solved the problem using sine waves — a method I found through further research. This experience reinforced the importance of broad research when solving specific coding problems.</p>
+  </div>
+
+  <div class="reflection-block">
+    <div class="reflection-label">Future Goals</div>
+    <p>I'll continue improving across game development, Unity, and C#. In future group projects I'll be more deliberate about team selection. Most importantly, I'll keep setting myself challenges outside my current knowledge — the process of unpacking procedural generation significantly improved my coding skills and confidence.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- RESOURCES -->
+  <div class="section-title">Resources Used</div>
+  <ul class="resources-list">
+    <li><a href="https://gamedevacademy.org/complete-guide-to-procedural-level-generation-in-unity-part-1/" target="_blank" rel="noopener">Complete Guide To Unity Procedural Generation — GameDev Academy</a></li>
+    <li><a href="https://youtu.be/sQdpxWr3RKE?si=VYnGNeLTclCs8W6y" target="_blank" rel="noopener">Beginners Guide to Procedural Generation</a></li>
+    <li><a href="https://youtu.be/pmZQMzObjNo?si=8XRxOggzmGxL3Hnj" target="_blank" rel="noopener">Procedural Terrain Generator! UNITY</a></li>
+    <li><a href="https://youtu.be/H6FhG9VKhJg?si=sirKztFvhtZqW25n" target="_blank" rel="noopener">The Theory of Noise: An Overview of Perlin Noise</a></li>
+    <li><a href="https://www.youtube.com/watch?v=DBjd7NHMgOE" target="_blank" rel="noopener">How to make a procedural grid world in under 2 minutes in Unity (series)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=vFvwyu_ZKfU" target="_blank" rel="noopener">GENERATING TERRAIN in Unity — Procedural Generation Tutorial</a></li>
+    <li><a href="https://docs.unity3d.com/ScriptReference/Mesh.html" target="_blank" rel="noopener">Unity Scripting Reference — Mesh</a></li>
+    <li><a href="https://www.youtube.com/watch?v=wbpMiKiSKm8&list=PLFt_AvWsXl0eBW2EiBtl_sxmDtSgZBxB3&index=1" target="_blank" rel="noopener">Procedural Landmass Generation (E01: Introduction) — Sebastian Lague (series)</a></li>
+    <li><a href="https://www.youtube.com/watch?v=YyVAaJqYAfE&list=PLpN1vSirtlzYm4p0Tsc8nx-De7W7eWlGR&index=4" target="_blank" rel="noopener">How Minecraft ACTUALLY Works</a></li>
+    <li><a href="https://www.youtube.com/watch?v=-POwgollFeY&list=PLpN1vSirtlzYm4p0Tsc8nx-De7W7eWlGR&index=1" target="_blank" rel="noopener">How does procedural generation work? — Bitwise</a></li>
+    <li><a href="https://www.youtube.com/watch?v=20KHNA9jTsE&list=PLpN1vSirtlzYm4p0Tsc8nx-De7W7eWlGR&index=2" target="_blank" rel="noopener">Why I'm Using Wave Function Collapse for Procedural Terrain | Unity Devlog</a></li>
+    <li><a href="https://www.youtube.com/watch?v=-3ekimUWb9I&list=PLpN1vSirtlzYm4p0Tsc8nx-De7W7eWlGR&index=3" target="_blank" rel="noopener">How to create and modify a plane mesh in Unity (Procedural mesh generation tutorial)</a></li>
+  </ul>
+
+  <!-- REFERENCES -->
+  <div class="references">
+    <div class="section-title">References</div>
+    <p>Lague, S. (2016). <em>Procedural Landmass Generation (E02: Noise Map)</em> [YouTube Video]. <a href="https://www.youtube.com/watch?v=WP-Bm65Q-1Y" target="_blank" rel="noopener">youtube.com/watch?v=WP-Bm65Q-1Y</a></p>
+    <p>van der Linden, R., Lopes, R., &amp; Bidarra, R. (2014). Procedural Generation of Dungeons. <em>IEEE Transactions on Computational Intelligence and AI in Games</em>, 6(1), 78–89. <a href="https://doi.org/10.1109/tciaig.2013.2290371" target="_blank" rel="noopener">doi.org/10.1109/tciaig.2013.2290371</a></p>
+  </div>
+
+</div>
+
+<footer>
+  <a href="Wireframe Portfolio.html" class="nav-back" style="font-size:12px;">← Back to Portfolio</a>
+  <div class="footer-copy">© 2026 Reuben Poole</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reuben Poole — Game Developer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:        #ffffff;
+  --surface:   #f7f7f8;
+  --surface2:  #efefef;
+  --border:    #e0e0e0;
+  --border-dk: #c8c8c8;
+  --text:      #111111;
+  --muted:     #777777;
+  --accent:    oklch(0.48 0.16 252);
+  --accent-bg: oklch(0.97 0.02 252);
+
+  --font-display: 'Syne', sans-serif;
+  --font-body:    'DM Sans', sans-serif;
+
+  --nav-h:   60px;
+  --max-w:   960px;
+  --pad:     clamp(16px, 4vw, 48px);
+  --section-gap: clamp(56px, 8vw, 96px);
+}
+
+/* ── BASE ── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pad);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+}
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  align-items: center;
+}
+.nav-links a {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--text); }
+
+.nav-hire {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 18px;
+  background: var(--text);
+  color: var(--bg);
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+.nav-hire:hover { opacity: 0.8; }
+
+/* Hamburger */
+.nav-burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+.nav-burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  transition: transform 0.22s, opacity 0.22s;
+  transform-origin: center;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile drawer */
+.nav-drawer {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 16px var(--pad) 24px;
+  z-index: 99;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav-drawer.open {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nav-drawer a {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  display: block;
+  transition: color 0.15s;
+}
+.nav-drawer a:hover { color: var(--text); }
+.nav-drawer .drawer-hire {
+  margin-top: 16px;
+  display: block;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 14px;
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* ── PAGE WRAP ── */
+.page {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* ── SECTION HEADER ── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+.section-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.section-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── IMG PLACEHOLDER ── */
+.img-placeholder {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  text-align: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.025) 10px,
+    rgba(0,0,0,0.025) 11px
+  );
+}
+.img-placeholder svg,
+.img-placeholder p { position: relative; z-index: 1; }
+
+/* ── ABOUT ── */
+.about-section {
+  padding: var(--section-gap) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.about-photo {
+  width: 100%;
+  aspect-ratio: 3/4;
+}
+
+.about-socials {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+.social-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-dk);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.social-btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.about-bio h2 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3.5vw, 30px);
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.about-bio p {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 300;
+  margin-bottom: 14px;
+  line-height: 1.7;
+}
+.about-bio p strong { color: var(--text); font-weight: 500; }
+.about-bio p a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+
+/* Education */
+.edu-list {
+  margin: 24px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.edu-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--accent);
+}
+.edu-badge {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+  padding-top: 1px;
+}
+.edu-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text);
+}
+
+/* Skills */
+.skills-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+.skill {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid var(--border-dk);
+  color: var(--muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+.skill:hover { border-color: var(--text); color: var(--text); }
+.skill.primary {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+/* ── PROJECTS ── */
+.projects-section {
+  padding: var(--section-gap) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px 32px;
+}
+
+.project-card { display: flex; flex-direction: column; gap: 0; }
+
+.project-img {
+  width: 100%;
+  aspect-ratio: 16/10;
+  margin-bottom: 16px;
+  object-fit: cover;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.tag {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.project-title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.project-desc {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 300;
+  line-height: 1.65;
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.project-link {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.15s;
+}
+.project-link:hover { gap: 10px; }
+
+/* Itch block */
+.itch-block {
+  grid-column: 1 / -1;
+  border: 1px solid var(--border);
+  padding: 28px;
+  background: var(--surface);
+}
+
+.itch-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.itch-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.itch-games {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.itch-game {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.itch-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+.itch-info { padding: 12px 14px 14px; }
+
+.itch-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.itch-link {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── CTA ── */
+.cta-section {
+  padding: var(--section-gap) 0;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 12px;
+  overflow: visible;
+  padding-bottom: 4px;
+}
+
+.cta-section p {
+  font-size: 15px;
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 400px;
+  margin: 0 auto 32px;
+}
+
+.cta-btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 15px 40px;
+  background: var(--text);
+  color: var(--bg);
+  border: 1px solid var(--text);
+  transition: background 0.15s, color 0.15s;
+}
+.cta-btn:hover { background: var(--bg); color: var(--text); }
+
+.cta-email {
+  display: block;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+.cta-email a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 300;
+}
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.footer-links a {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--text); }
+
+/* ── FADE IN ── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .nav-links, .nav-hire { display: none; }
+  .nav-burger { display: flex; }
+  .nav-drawer { display: flex; }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .about-photo {
+    max-width: 180px;
+    aspect-ratio: 1/1;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  .itch-block { grid-column: 1; }
+  .itch-games { grid-template-columns: 1fr; }
+  .itch-thumb { aspect-ratio: 16/8; }
+
+  footer { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .about-grid { gap: 20px; }
+  .itch-games { grid-template-columns: 1fr 1fr; }
+  .cta-section h2 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Reuben <span>Poole</span></div>
+
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <a href="#contact" class="nav-hire">Hire Me</a>
+
+  <button class="nav-burger" id="burger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="drawer">
+  <a href="#about">About</a>
+  <a href="#projects">Projects</a>
+  <a href="#contact">Contact</a>
+  <a href="#contact" class="drawer-hire">Hire Me</a>
+</div>
+
+<div class="page">
+
+  <!-- ABOUT -->
+  <section class="about-section fade-in" id="about">
+    <div class="section-header">
+      <span class="section-label">About</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="about-grid">
+      <div>
+        <img src="uploads/CoverPhoto.jpg" alt="Reuben Poole" class="about-photo" style="object-fit:cover; border:1px solid var(--border);">
+
+        <div class="about-socials">
+          <a class="social-btn" href="mailto:poolereuben@gmail.com" title="Email">✉</a>
+          <a class="social-btn" href="https://www.linkedin.com/in/reuben-poole-60316a351/" title="LinkedIn" target="_blank" rel="noopener">in</a>
+        </div>
+      </div>
+
+      <div class="about-bio">
+        <h2>Hi, I'm Reuben.</h2>
+        <p>I'm a <strong>game developer, animator, and creative</strong> with a passion for building interactive systems and experiences.</p>
+        <p>I hold an <strong>Associate Degree in Game Design</strong> and a <strong>Diploma of Animation</strong> from SAE Institute, covering the full pipeline. My main passions include designing game systems in Unity with a particular interest in procedural generation. I have a large amount of experience working in teams, and get along well with a large variety of people.</p>
+        <p>Growing up in <strong>Byron Bay, NSW</strong> I believe I have developed a healthy balance between creativity, socialising, and working hard on technical projects. Outside of game dev I've spent upwards of two years solo travelling through <strong>Europe and Asia</strong>, which has helped me develop a number of social and problem solving skills that I am very grateful for.</p>
+
+        <div class="edu-list">
+          <div class="edu-item">
+            <span class="edu-badge">Degree</span>
+            <span class="edu-text">Associate Degree in Game Design — SAE Institute</span>
+          </div>
+          <div class="edu-item">
+            <span class="edu-badge">Diploma</span>
+            <span class="edu-text">Diploma of Animation — SAE Institute</span>
+          </div>
+        </div>
+
+        <div class="skills-wrap">
+          <span class="skill primary">Unity</span>
+          <span class="skill primary">C#</span>
+          <span class="skill primary">Blender</span>
+          <span class="skill">Java</span>
+          <span class="skill">2D Animation</span>
+          <span class="skill">Graphic Design</span>
+          <span class="skill">WWise</span>
+          <span class="skill">Procedural Gen</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="projects-section fade-in" id="projects">
+    <div class="section-header">
+      <span class="section-label">Projects</span>
+      <div class="section-rule"></div>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- Project 1 -->
+      <div class="project-card">
+        <img src="uploads/Screen Recording 2026-04-28 at 1.24.18 pm.gif" alt="Procedural Island Generator" class="project-img" style="object-fit:cover; border:1px solid var(--border); image-rendering: auto; width:100%;">
+        <div class="project-tags">
+          <span class="tag">Unity</span>
+          <span class="tag">C#</span>
+          <span class="tag">Procedural Gen</span>
+          <span class="tag">Mesh Gen</span>
+        </div>
+        <div class="project-title">Procedural Island Generator</div>
+        <p class="project-desc">Real-time procedural island generator built in Unity. Uses noise functions and custom mesh generation to produce unique, explorable terrain on every run.</p>
+        <a href="island-project.html" class="project-link">View Project →</a>
+      </div>
+
+      <!-- Project 2 -->
+      <div class="project-card">
+        <img src="uploads/GheckoGreyBackgroundTrimmed-e74d90fd.gif" alt="Procedural Lizard Animation" class="project-img" style="object-fit:cover; border:1px solid var(--border); image-rendering:auto; width:100%;">
+        <div class="project-tags">
+          <span class="tag">Unity</span>
+          <span class="tag">C#</span>
+          <span class="tag">2D Animation</span>
+          <span class="tag">Procedural Anim.</span>
+        </div>
+        <div class="project-title">Procedural Lizard Animation</div>
+        <p class="project-desc">2D procedural animation system built in Unity. The lizard's limbs and body adapt dynamically to movement for natural, fluid creature motion.</p>
+        <a href="https://www.youtube.com/watch?v=3_HMrLDZ5w8" target="_blank" rel="noopener" class="project-link">View Project →</a>
+      </div>
+
+      <!-- Itch.io -->
+      <div class="itch-block">
+        <div class="itch-header">
+          <div class="itch-title">Shipped Itch.io Games</div>
+          <a href="#" class="project-link" style="font-size:11px;">View Itch.io Profile →</a>
+        </div>
+        <div class="itch-games">
+          <div class="itch-game">
+            <img src="uploads/Screenshot 2026-04-28 at 1.45.48 pm.png" alt="Tank" class="itch-thumb" style="object-fit:cover;">
+            <div class="itch-info">
+              <div class="itch-name">Tank</div>
+              <a href="https://reubenpoole.itch.io/tank" target="_blank" rel="noopener" class="itch-link">Play on Itch.io →</a>
+            </div>
+          </div>
+          <div class="itch-game">
+            <img src="uploads/Screenshot 2026-04-28 at 1.46.16 pm.png" alt="Escape From Area 51" class="itch-thumb" style="object-fit:cover;">
+            <div class="itch-info">
+              <div class="itch-name">Escape From Area 51</div>
+              <a href="https://reubenpoole.itch.io/escape-from-area-51" target="_blank" rel="noopener" class="itch-link">Play on Itch.io →</a>
+            </div>
+          </div>
+          <div class="itch-game">
+            <img src="uploads/Screenshot 2026-04-28 at 1.47.59 pm.png" alt="BallBones" class="itch-thumb" style="object-fit:cover;">
+            <div class="itch-info">
+              <div class="itch-name">BallBones</div>
+              <a href="https://cooperrampling.itch.io/ball-bones" target="_blank" rel="noopener" class="itch-link">Play on Itch.io →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="cta-section fade-in" id="contact">
+    <div class="section-header" style="justify-content:center; margin-bottom:28px;">
+      <span class="section-label">Get In Touch</span>
+    </div>
+    <h2>Let's make something great.</h2>
+    <p>Open to freelance work, collaborations, and full-time game dev roles. Drop me a line.</p>
+    <a href="mailto:poolereuben@gmail.com" class="cta-btn">Contact Me</a>
+    <div class="cta-email">Or email directly: <a href="mailto:poolereuben@gmail.com">poolereuben@gmail.com</a></div>
+  </section>
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 Reuben Poole</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+    <a href="mailto:poolereuben@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/reuben-poole-60316a351/" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script>
+// ── TWEAK DEFAULTS ──
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "blue",
+  "typeWeight": "bold",
+  "density": "compact"
+}/*EDITMODE-END*/;
+
+const ACCENTS = {
+  blue:    { '--accent': 'oklch(0.48 0.16 252)', '--accent-bg': 'oklch(0.97 0.02 252)' },
+  forest:  { '--accent': 'oklch(0.46 0.14 155)', '--accent-bg': 'oklch(0.97 0.02 155)' },
+  slate:   { '--accent': 'oklch(0.42 0.05 255)', '--accent-bg': 'oklch(0.97 0.01 255)' },
+  amber:   { '--accent': 'oklch(0.52 0.14 60)',  '--accent-bg': 'oklch(0.97 0.02 60)'  }
+};
+
+const TYPE_WEIGHTS = {
+  light: {
+    bodyWeight: '300', headingWeight: '700',
+    heroSize: 'clamp(22px, 3.5vw, 30px)', bodySize: '15px', lineH: '1.7'
+  },
+  bold: {
+    bodyWeight: '400', headingWeight: '800',
+    heroSize: 'clamp(26px, 4vw, 36px)', bodySize: '15px', lineH: '1.6'
+  }
+};
+
+const DENSITIES = {
+  comfortable: { sectionGap: 'clamp(56px, 8vw, 96px)', cardPad: '28px', gridGap: '40px 32px' },
+  compact:     { sectionGap: 'clamp(32px, 5vw, 56px)', cardPad: '16px', gridGap: '24px 20px' }
+};
+
+let tweaks = { ...TWEAK_DEFAULTS };
+
+function applyAccent(name) {
+  const t = ACCENTS[name]; if (!t) return;
+  Object.entries(t).forEach(([k,v]) => document.documentElement.style.setProperty(k, v));
+}
+
+function applyTypeWeight(name) {
+  const t = TYPE_WEIGHTS[name]; if (!t) return;
+  document.documentElement.style.setProperty('--body-weight', t.bodyWeight);
+  document.querySelectorAll('.about-bio p, .project-desc').forEach(el => {
+    el.style.fontWeight = t.bodyWeight;
+    el.style.lineHeight = t.lineH;
+    el.style.fontSize = t.bodySize;
+  });
+  document.querySelectorAll('.about-bio h2').forEach(el => {
+    el.style.fontWeight = t.headingWeight;
+    el.style.fontSize = t.heroSize;
+  });
+  document.querySelectorAll('.project-title').forEach(el => {
+    el.style.fontWeight = t.headingWeight;
+  });
+}
+
+function applyDensity(name) {
+  const d = DENSITIES[name]; if (!d) return;
+  document.documentElement.style.setProperty('--section-gap', d.sectionGap);
+  document.querySelectorAll('.project-card').forEach(el => el.style.gap = '0');
+  document.querySelectorAll('.itch-block').forEach(el => el.style.padding = d.cardPad);
+  document.querySelector('.projects-grid') && (document.querySelector('.projects-grid').style.gap = d.gridGap);
+}
+
+function applyAll(t) {
+  applyAccent(t.accent);
+  applyTypeWeight(t.typeWeight);
+  applyDensity(t.density);
+}
+
+applyAll(tweaks);
+
+// ── BUILD PANEL ──
+(function() {
+  const ACCENT_OPTS = [
+    { name:'blue',   label:'Blue',   color:'oklch(0.48 0.16 252)' },
+    { name:'forest', label:'Forest', color:'oklch(0.46 0.14 155)' },
+    { name:'slate',  label:'Slate',  color:'oklch(0.42 0.05 255)' },
+    { name:'amber',  label:'Amber',  color:'oklch(0.52 0.14 60)'  },
+  ];
+
+  const panel = document.createElement('div');
+  panel.id = 'tp';
+  panel.style.cssText = `
+    position:fixed; bottom:24px; right:24px; z-index:9999; width:272px;
+    background:#fff; border:1px solid #e0e0e0;
+    box-shadow:0 4px 24px rgba(0,0,0,0.10);
+    font-family:'DM Sans',sans-serif; display:none; flex-direction:column;
+  `;
+
+  panel.innerHTML = `
+    <div id="tp-bar" style="display:flex;align-items:center;justify-content:space-between;
+      padding:12px 16px; border-bottom:1px solid #e0e0e0; cursor:move; background:#f7f7f8;">
+      <span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+        letter-spacing:0.16em;text-transform:uppercase;color:#111;">Tweaks</span>
+      <button id="tp-x" style="background:none;border:none;cursor:pointer;
+        font-size:18px;line-height:1;color:#999;padding:0 2px;">×</button>
+    </div>
+
+    <div style="padding:18px 16px;display:flex;flex-direction:column;gap:20px;">
+
+      <!-- Accent -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+          letter-spacing:0.18em;text-transform:uppercase;color:#999;margin-bottom:10px;">Accent Colour</div>
+        <div style="display:flex;gap:10px;" id="tp-accents">
+          ${ACCENT_OPTS.map(a => `
+            <button data-accent="${a.name}" title="${a.label}" style="
+              width:30px;height:30px;border-radius:50%;border:2px solid transparent;
+              background:${a.color};cursor:pointer;flex-shrink:0;
+              transition:border-color 0.15s,transform 0.15s;
+            "></button>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- Type Weight -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+          letter-spacing:0.18em;text-transform:uppercase;color:#999;margin-bottom:10px;">Type Style</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="tp-weights">
+          <button data-weight="light" style="
+            font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+            letter-spacing:0.06em;text-transform:uppercase;padding:9px 4px;
+            border:1px solid #e0e0e0;cursor:pointer;background:transparent;color:#777;
+            transition:border-color 0.15s,color 0.15s;display:flex;flex-direction:column;
+            align-items:center;gap:2px;">
+            <span>Light</span><span style="font-size:9px;opacity:0.6;font-weight:400;">Elegant</span>
+          </button>
+          <button data-weight="bold" style="
+            font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+            letter-spacing:0.06em;text-transform:uppercase;padding:9px 4px;
+            border:1px solid #e0e0e0;cursor:pointer;background:transparent;color:#777;
+            transition:border-color 0.15s,color 0.15s;display:flex;flex-direction:column;
+            align-items:center;gap:2px;">
+            <span>Bold</span><span style="font-size:9px;opacity:0.6;font-weight:400;">Punchy</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Density -->
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;
+          letter-spacing:0.18em;text-transform:uppercase;color:#999;margin-bottom:10px;">Spacing</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="tp-density">
+          <button data-density="comfortable" style="
+            font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+            letter-spacing:0.06em;text-transform:uppercase;padding:9px 4px;
+            border:1px solid #e0e0e0;cursor:pointer;background:transparent;color:#777;
+            transition:border-color 0.15s,color 0.15s;display:flex;flex-direction:column;
+            align-items:center;gap:2px;">
+            <span>Airy</span><span style="font-size:9px;opacity:0.6;font-weight:400;">Spacious</span>
+          </button>
+          <button data-density="compact" style="
+            font-family:'Syne',sans-serif;font-size:11px;font-weight:700;
+            letter-spacing:0.06em;text-transform:uppercase;padding:9px 4px;
+            border:1px solid #e0e0e0;cursor:pointer;background:transparent;color:#777;
+            transition:border-color 0.15s,color 0.15s;display:flex;flex-direction:column;
+            align-items:center;gap:2px;">
+            <span>Compact</span><span style="font-size:9px;opacity:0.6;font-weight:400;">Dense</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  `;
+
+  document.body.appendChild(panel);
+
+  function refreshUI() {
+    const accentColor = ACCENTS[tweaks.accent]['--accent'];
+    panel.querySelectorAll('[data-accent]').forEach(b => {
+      const active = b.dataset.accent === tweaks.accent;
+      b.style.borderColor = active ? '#111' : 'transparent';
+      b.style.transform = active ? 'scale(1.15)' : 'scale(1)';
+    });
+    panel.querySelectorAll('[data-weight]').forEach(b => {
+      const active = b.dataset.weight === tweaks.typeWeight;
+      b.style.borderColor = active ? accentColor : '#e0e0e0';
+      b.style.color = active ? '#111' : '#777';
+    });
+    panel.querySelectorAll('[data-density]').forEach(b => {
+      const active = b.dataset.density === tweaks.density;
+      b.style.borderColor = active ? accentColor : '#e0e0e0';
+      b.style.color = active ? '#111' : '#777';
+    });
+  }
+
+  panel.querySelectorAll('[data-accent]').forEach(b => b.addEventListener('click', () => {
+    tweaks.accent = b.dataset.accent; applyAccent(tweaks.accent); refreshUI(); persist();
+  }));
+  panel.querySelectorAll('[data-weight]').forEach(b => b.addEventListener('click', () => {
+    tweaks.typeWeight = b.dataset.weight; applyTypeWeight(tweaks.typeWeight); refreshUI(); persist();
+  }));
+  panel.querySelectorAll('[data-density]').forEach(b => b.addEventListener('click', () => {
+    tweaks.density = b.dataset.density; applyDensity(tweaks.density); refreshUI(); persist();
+  }));
+
+  panel.querySelector('#tp-x').addEventListener('click', () => {
+    panel.style.display = 'none';
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  });
+
+  function persist() {
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { ...tweaks } }, '*');
+  }
+
+  // Drag
+  const bar = panel.querySelector('#tp-bar');
+  let drag = false, ox = 0, oy = 0;
+  bar.addEventListener('mousedown', e => {
+    drag = true;
+    const r = panel.getBoundingClientRect();
+    ox = e.clientX - r.left; oy = e.clientY - r.top;
+    panel.style.right = 'auto'; panel.style.bottom = 'auto';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!drag) return;
+    panel.style.left = (e.clientX - ox) + 'px';
+    panel.style.top  = (e.clientY - oy) + 'px';
+  });
+  document.addEventListener('mouseup', () => drag = false);
+
+  // Host protocol — register listener FIRST
+  window.addEventListener('message', e => {
+    if (e.data?.type === '__activate_edit_mode')   { panel.style.display = 'flex'; refreshUI(); }
+    if (e.data?.type === '__deactivate_edit_mode')   panel.style.display = 'none';
+  });
+  window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+  refreshUI();
+})();
+
+// ── Hamburger
+const burger = document.getElementById('burger');
+const drawer = document.getElementById('drawer');
+
+burger.addEventListener('click', () => {
+  const open = burger.classList.toggle('open');
+  drawer.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+
+drawer.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+document.addEventListener('click', e => {
+  if (!burger.contains(e.target) && !drawer.contains(e.target)) {
+    burger.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+// Fade in on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
