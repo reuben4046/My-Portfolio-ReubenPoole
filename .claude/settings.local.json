@@ -10,7 +10,8 @@
       "Bash(ssh-keyscan github.com)",
       "Bash(gh auth *)",
       "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole remote set-url origin https://github.com/reuben4046/My-Portfolio-ReubenPoole.git)",
-      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole config credential.helper osxkeychain)"
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole config credential.helper osxkeychain)",
+      "Bash(git -C /Users/reubenpoole/Documents/GitHub/My-Portfolio-ReubenPoole diff index.html)"
     ]
   }
 }
